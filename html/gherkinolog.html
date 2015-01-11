@@ -1,0 +1,90 @@
+<link rel="import" href="bower_components/core-header-panel/core-header-panel.html">
+<link rel="import" href="bower_components/core-drawer-panel/core-drawer-panel.html">
+<link rel="import" href="bower_components/core-toolbar/core-toolbar.html">
+<link rel="import" href="bower_components/core-icon-button/core-icon-button.html">
+<link rel="import" href="bower_components/core-menu/core-submenu.html">
+<link rel="import" href="animated-page.html">
+
+<polymer-element name="gherkinolog-main">
+  <template>
+    <style>
+        core-header-panel {
+          height: 100%;
+          overflow: auto;
+          -webkit-overflow-scrolling: touch;
+        }
+
+        .drawertoolbar {
+          height: 100px;
+          line-height: 100px;
+          font-size: 18px;
+          padding: 0 10px;
+          transition: height 0.2s;
+          background-color: white;
+        }
+
+        .maintoolbar {
+          font-size: 18px;
+          padding: 0 10px;
+          transition: height 0.2s;
+          color:white;
+        }
+
+        .tall {
+            padding-top:100px;
+        }
+        .maintoolbar.tall {
+          font-size:28px;
+        }
+        
+        .content {
+          height: 2000px;
+          background-color:white;
+        }
+    </style>
+
+<core-drawer-panel>
+  <core-header-panel drawer mode="seamed">
+    <core-toolbar class="drawertoolbar">
+      <content select=".gherkinolog-logo"></content>
+    </core-toolbar>
+    <div>
+
+      <core-menu>
+        <core-submenu icon="expand-more" label="General">
+          <core-item label="Terms & Definitions"></core-item>
+          <core-item label="Versions"></core-item>
+        </core-submenu>
+
+      </core-menu>
+<!--
+      <spec-menu id="theSpecMenu"></spec-menu>
+-->
+    </div>
+  </core-header-panel>
+  <core-header-panel main mode="waterfall-tall">
+    <core-toolbar class="maintoolbar">
+      <content select=".gherkinolog-toolbar"></content>
+    </core-toolbar>
+    <div class="content">
+      <animated-page id="ani" style="width:100%; height:100%;">
+        <content></content>
+      </animated-page>
+    </div>
+  </core-header-panel>
+</core-drawer-panel>
+</template>
+<script>
+Polymer('gherkinolog-main', {
+    ready: function() {
+        var ani = this.$.ani;
+//        this.$.theSpecMenu.addEventListener('spec-menu-selected', function(e) {
+//            var element = document.createElement('features-directory');
+//            var directory = e.detail.directory;
+//            element.directory = directory;
+//            ani.switchToElement(element);
+//        });
+    },
+});
+</script>
+</polymer-element>

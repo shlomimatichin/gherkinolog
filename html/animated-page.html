@@ -1,5 +1,5 @@
-<link rel="import" href="../bower_components/core-animated-pages/core-animated-pages.html">
-<link rel="import" href="../bower_components/core-animated-pages/transitions/slide-up.html">
+<link rel="import" href="bower_components/core-animated-pages/core-animated-pages.html">
+<link rel="import" href="bower_components/core-animated-pages/transitions/slide-up.html">
 
 <polymer-element name="animated-page">
   <template>
@@ -15,7 +15,9 @@
     </style>
     <core-animated-pages id="root" transitions="slide-up">
       <section>
-        <div slide-up id="div0"></div>
+        <div slide-up id="div0">
+          <content></content>
+        </div>
       </section>
       <section>
         <div slide-up id="div1"></div>
