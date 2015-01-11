@@ -1,0 +1,55 @@
+<link rel="import" href="../bower_components/core-animated-pages/core-animated-pages.html">
+<link rel="import" href="../bower_components/core-animated-pages/transitions/slide-up.html">
+
+<polymer-element name="animated-page">
+  <template>
+    <style>
+      div {
+        height: 100%;
+        width: 100%;
+      }
+      #root {
+        height: 100%;
+        width: 100%;
+      }
+    </style>
+    <core-animated-pages id="root" transitions="slide-up">
+      <section>
+        <div slide-up id="div0"></div>
+      </section>
+      <section>
+        <div slide-up id="div1"></div>
+      </section>
+    </core-animated-pages>
+  </template>
+  <script>
+Polymer('animated-page', {
+    renderAndSwitch: function(html) {
+        var p = this.$.root;
+        if (p.selected == 0) {
+            this.$.div1.innerHTML = html;
+            p.selected = 1;
+        } else {
+            this.$.div0.innerHTML = html;
+            p.selected = 0;
+        }
+    },
+    switchToElement: function(element) {
+        var p = this.$.root;
+        if (p.selected == 0) {
+            while (this.$.div1.children.length > 0)
+                this.$.div1.removeChild(this.$.div1.children[0]);
+            this.$.div1.appendChild(element);
+            p.selected = 1;
+        } else {
+            while (this.$.div0.children.length > 0)
+                this.$.div0.removeChild(this.$.div0.children[0]);
+            this.$.div0.appendChild(element);
+            p.selected = 0;
+        }
+    },
+});
+  </script>
+</polymer-element>
+
+</body>

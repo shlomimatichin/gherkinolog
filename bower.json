@@ -1,0 +1,31 @@
+{
+  "name": "gherkinolog",
+  "version": "0.0.1",
+  "authors": [
+    "Shlomi Matichin <shlomomatichin@gmail.com>"
+  ],
+  "license": "Apache V2",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#~0.5.1",
+    "core-header-panel": "Polymer/core-header-panel#~0.5.1",
+    "font-roboto": "Polymer/font-roboto#~0.5.1",
+    "core-toolbar": "Polymer/core-toolbar#~0.5.1",
+    "core-drawer-panel": "Polymer/core-drawer-panel#~0.5.1",
+    "core-icon-button": "Polymer/core-icon-button#~0.5.1",
+    "core-menu": "Polymer/core-menu#~0.5.1",
+    "paper-checkbox": "Polymer/paper-checkbox#~0.5.1",
+    "paper-toggle-button": "Polymer/paper-toggle-button#~0.5.1",
+    "jquery": "~2.1.1",
+    "underscore": "~1.7.0",
+    "qunit": "~1.16.0",
+    "core-animated-pages": "Polymer/core-animated-pages#~0.5.1",
+    "impress.js": "~0.5.3"
+  }
+}

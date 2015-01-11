@@ -1,0 +1,272 @@
+<link rel="import" href="../bower_components/core-collapse/core-collapse.html">
+
+<polymer-element name="feature-gherkin-line" attributes="line">
+  <template>
+    <style>
+      .line-Given {
+        color: #cc0;
+      }
+      .line-When {
+        color: #4dd;
+      }
+      .line-Then {
+        color: #44d;
+      }
+      .quotes {
+        color: #FF9933;
+      }
+      .exampleVariable {
+        color: #FF9933;
+      }
+    </style>
+    <strong class="line-{{line.logical}}">{{line.firstToken}}</strong>
+    <span id="filteredLine"></span>
+  </template>
+  <script>
+Polymer('feature-gherkin-line', {
+    ready: function() {
+        var filtered = "";
+        var openedQuotes = false;
+        for (var i = 0; i < this.line.text.length; i += 1) {
+            var ch = this.line.text[i];
+            if (ch == '"') {
+                if (openedQuotes) {
+                    filtered += '"</span>';
+                    openedQuotes = false;
+                } else {
+                    filtered += '<span class="quotes">"';
+                    openedQuotes = true;
+                }
+            } else if (ch == "<") {
+                filtered += '<span class="exampleVariable">&lt;';
+            } else if (ch == ">") {
+                filtered += '&gt;</span>';
+            } else {
+                filtered += ch;
+            }
+        }
+        this.injectBoundHTML(filtered, this.$.filteredLine);
+    }
+});
+  </script>
+</polymer-element>
+
+<polymer-element name="feature-gherkin-lines" attributes="lines label examples">
+  <template>
+    <style>
+      ul {
+        list-style: none;
+      }
+      .label {
+        cursor: pointer; 
+        font-weight: bold;
+      }
+      .examples {
+        padding-left:80px;
+        width: 400px;
+      }
+      .examplesLabel {
+        font-weight: bold;
+      }
+
+
+
+.CSSTableGenerator {
+	margin:0px;padding:0px;
+	width:100%;
+	border:1px solid #000000;
+	
+	-moz-border-radius-bottomleft:0px;
+	-webkit-border-bottom-left-radius:0px;
+	border-bottom-left-radius:0px;
+	
+	-moz-border-radius-bottomright:0px;
+	-webkit-border-bottom-right-radius:0px;
+	border-bottom-right-radius:0px;
+	
+	-moz-border-radius-topright:0px;
+	-webkit-border-top-right-radius:0px;
+	border-top-right-radius:0px;
+	
+	-moz-border-radius-topleft:0px;
+	-webkit-border-top-left-radius:0px;
+	border-top-left-radius:0px;
+}.CSSTableGenerator table{
+    border-collapse: collapse;
+        border-spacing: 0;
+	width:100%;
+	height:100%;
+	margin:0px;padding:0px;
+}.CSSTableGenerator tr:last-child td:last-child {
+	-moz-border-radius-bottomright:0px;
+	-webkit-border-bottom-right-radius:0px;
+	border-bottom-right-radius:0px;
+}
+.CSSTableGenerator table tr:first-child td:first-child {
+	-moz-border-radius-topleft:0px;
+	-webkit-border-top-left-radius:0px;
+	border-top-left-radius:0px;
+}
+.CSSTableGenerator table tr:first-child td:last-child {
+	-moz-border-radius-topright:0px;
+	-webkit-border-top-right-radius:0px;
+	border-top-right-radius:0px;
+}.CSSTableGenerator tr:last-child td:first-child{
+	-moz-border-radius-bottomleft:0px;
+	-webkit-border-bottom-left-radius:0px;
+	border-bottom-left-radius:0px;
+}.CSSTableGenerator tr:hover td{
+	
+}
+.CSSTableGenerator tr:nth-child(odd){ background-color:#e5e5e5; }
+.CSSTableGenerator tr:nth-child(even)    { background-color:#ffffff; }.CSSTableGenerator td{
+	vertical-align:middle;
+	
+	
+	border:1px solid #000000;
+	border-width:0px 1px 1px 0px;
+	text-align:left;
+	padding:7px;
+	font-size:10px;
+	font-family:Arial;
+	font-weight:normal;
+	color:#000000;
+}.CSSTableGenerator tr:last-child td{
+	border-width:0px 1px 0px 0px;
+}.CSSTableGenerator tr td:last-child{
+	border-width:0px 0px 1px 0px;
+}.CSSTableGenerator tr:last-child td:last-child{
+	border-width:0px 0px 0px 0px;
+}
+.CSSTableGenerator tr:first-child td{
+		background:-o-linear-gradient(bottom, #cccccc 5%, #b2b2b2 100%);	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #cccccc), color-stop(1, #b2b2b2) );
+	background:-moz-linear-gradient( center top, #cccccc 5%, #b2b2b2 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr="#cccccc", endColorstr="#b2b2b2");	background: -o-linear-gradient(top,#cccccc,b2b2b2);
+
+	background-color:#cccccc;
+	border:0px solid #000000;
+	text-align:center;
+	border-width:0px 0px 1px 1px;
+	font-size:14px;
+	font-family:Arial;
+	font-weight:bold;
+	color:#000000;
+}
+.CSSTableGenerator tr:first-child:hover td{
+	background:-o-linear-gradient(bottom, #cccccc 5%, #b2b2b2 100%);	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #cccccc), color-stop(1, #b2b2b2) );
+	background:-moz-linear-gradient( center top, #cccccc 5%, #b2b2b2 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr="#cccccc", endColorstr="#b2b2b2");	background: -o-linear-gradient(top,#cccccc,b2b2b2);
+
+	background-color:#cccccc;
+}
+.CSSTableGenerator tr:first-child td:first-child{
+	border-width:0px 0px 1px 0px;
+}
+.CSSTableGenerator tr:first-child td:last-child{
+	border-width:0px 0px 1px 1px;
+}
+
+
+    </style>
+    <div class="label" on-click="{{toggle}}">
+        <core-icon icon="{{chevronIcon}}"></core-icon>
+        {{label}}
+    </div>
+    <core-collapse id="collapse">
+      <ul>
+        <template repeat="{{line in lines}}">
+          <li>
+            <feature-gherkin-line line="{{line}}"></feature-gherkin-line>
+          </li>
+        </template>
+      </ul>
+      <template if="{{examples !== undefined}}">
+        <div class="examples">
+          <div class="examplesLabel">Examples:</div>
+          <div class="CSSTableGenerator">
+            <table>
+              <tr>
+                <template repeat="{{column in examples.columns}}">
+                  <td>&lt;{{column}}&gt;</td>
+                </template>
+              </tr>
+              <template repeat="{{data in examples.data}}">
+                <tr>
+                  <template repeat="{{column in data}}">
+                    <td>{{column}}</td>
+                  </template>
+                </tr>
+              </template>
+            </table>
+          </div>
+        </div>
+      </template>
+    </core-collapse>
+  </template>
+  <script>
+Polymer('feature-gherkin-lines', {
+    chevronIcon: "chevron-right",
+    toggle: function() {
+        this.$.collapse.toggle();
+        if (this.$.collapse.opened)
+            this.chevronIcon = "expand-more";
+        else
+            this.chevronIcon = "chevron-right";
+    },
+});
+  </script>
+</polymer-element>
+
+<polymer-element name="features-directory" attributes="directory" noscript>
+  <template>
+    <style shim-shadowdom="">
+        .root {
+          color: #444;
+        }
+    </style>
+    <style>
+        .root {
+          height: 100%;
+          background-color:white;
+          padding-top: 30px;
+          padding-left: 10px;
+          padding-right: 10px;
+        }
+        ul {
+          list-style: none;
+        }
+        a {
+          text-decoration: none;
+          color: #3367d6;
+        }
+    </style>
+    <div class="root">
+        <H1>{{directory.title}}</H1>
+        <strong>Table of contents</strong>
+        <ul>
+            <template repeat="{{ feature in directory.featureFiles }}">
+                <li>
+                    <a href="#">{{feature.title}}</a>
+                </li>
+            </template>
+        </ul>
+        <template repeat="{{ feature in directory.featureFiles }}">
+            <h2>Feature: {{feature.title}}</h2>
+            <p>
+                {{feature.description}}
+            </p>
+            <template if="{{ feature.background !== undefined }}">
+                <feature-gherkin-lines lines="{{ feature.background.lines }}" label="Background">
+                </feature-gherkin-lines>
+            </template>
+            <template repeat="{{ scenario in feature.scenarios }}">
+                <feature-gherkin-lines
+                    lines="{{ scenario.lines }}" 
+                    examples="{{ scenario.examples }}"
+                    label="Scenario: {{scenario.title}}">
+                </feature-gherkin-lines>
+            </template>
+        </template>
+    </div>
+  </template>
+</polymer-element>

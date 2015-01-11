@@ -1,0 +1,23 @@
+<link rel="import" href="../bower_components/paper-toggle-button/paper-toggle-button.html">
+
+<polymer-element name="settings-table-entry" attributes="label checked" noscript>
+  <template>
+    <style>
+    table {
+      width: 100%;
+      table-layout:fixed;
+    }
+
+    td {
+      text-align:center;
+      width: 50%;
+    }
+    </style>
+    <table>
+      <tr>
+        <td>{{ label }}</td>
+        <td><paper-toggle-button checked={{checked}}></paper-toggle-button></td>
+      </tr>
+    </table>
+  </template>
+</polymer-element>
