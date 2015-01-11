@@ -1,0 +1,18 @@
+<link rel="import" href="bower_components/core-ajax/core-ajax.html">
+
+<polymer-element name="include-html" attributes="href">
+  <template>
+    <core-ajax auto url="{{href}}" handleAs="text" on-core-response="{{handleResponse}}"></core-ajax>
+    <div id="container"></div>
+  </template>
+  <script>
+Polymer({
+    handleResponse: function(ev) {
+            console.log('here');
+            console.log(ev.detail.response);
+            console.log(this);
+        this.$.container.innerHTML = ev.detail.response;
+    },
+});
+  </script>
+</polymer-element>
