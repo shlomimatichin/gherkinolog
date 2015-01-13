@@ -1,0 +1,115 @@
+<link rel="import" href="bower_components/core-menu/core-submenu.html">
+<script src="bower_components/jquery/dist/jquery.min.js"></script>
+<script src="bower_components/underscore/underscore-min.js"></script>
+<script src="stringutils.js"></script>
+<script src="directory.js"></script>
+
+<polymer-element name="gherkinolog-directory-menu" attributes="selectedDirectory">
+  <template>
+    <core-menu on-core-select="{{selectAction}}">
+      <template repeat="{{directory, i in menu}}">
+
+        <template if="{{directory.subdirectories.length > 0}}">
+          <core-submenu icon="expand-more" label="{{directory.title}}" data-dir="{{directory.absPath}}">
+            <template repeat="{{subdirectory, j in directory.subdirectories}}">
+
+              <core-item label="{{subdirectory.title}}" data-dir="{{subdirectory.absPath}}"></core-item>
+
+            </template>
+          </core-submenu>
+        </template>
+        <template if="{{directory.subdirectories.length == 0}}">
+          <core-item label="{{directory.title}}" data-dir="{{directory.absPath}}"></core-item>
+        </template>
+
+      </template>
+    </core-menu>
+  </template>
+  <script>
+Polymer('gherkinolog-directory-menu', new function() {
+    var self = this;
+
+    self.getRootURL = function() {
+        var getParameters = parseGetParametersFromURL();
+        var root = getParameters.root;
+        if (getParameters.root !== undefined)
+            return getParameters.root;
+        else
+            return currentURLDirname() + "contents/";
+    };
+
+    self.menuRootURL = self.getRootURL();
+    self.menu = [];
+    self.menuParsingInProgress = 0;
+    self.menuDirectories = {};
+
+    self.newFetch = function() {
+        self.menuParsingInProgress += 1;
+    }
+
+    self.fetchCompletes = function() {
+        self.menuParsingInProgress -= 1;
+        if (self.menuParsingInProgress == 0)
+            self.doneFetchingEverything();
+    }
+
+    self.Directory = function( absPath, title ) {
+        var self = this;
+
+        self.absPath = absPath;
+        self.title = title;
+        self.subdirectories = [];
+    }
+
+    self.fileFound = function( dirAbsPath, filename ) {
+        if ( filename == "title.txt" ) {
+            self.newFetch();
+            $.ajax({url: dirAbsPath + filename}).done(function( title ) {
+                var properDirPath = deleteTerminatingSlash(dirAbsPath);
+                var directory = new self.Directory(properDirPath, stringStripWhitespace(title));
+                self.menuDirectories[properDirPath] = directory;
+                self.fetchCompletes();
+            });
+        }
+    }
+
+    self.doneFetchingEverything = function() {
+        var keys = _.keys(self.menuDirectories);
+        keys.sort();
+        for (var i in keys) {
+            var dirAbsPath = keys[i];
+            var directory = self.menuDirectories[dirAbsPath];
+            var parentDirectoryPath = stringDirname(dirAbsPath);
+            if (parentDirectoryPath == deleteTerminatingSlash(self.menuRootURL)) {
+                self.menu.push(directory);
+            } else {
+                self.menuDirectories[parentDirectoryPath].subdirectories.push(directory);
+            }
+        }
+    }
+
+    self.recursiveScanDirectory = function( dirAbsPath ) {
+        self.newFetch();
+        getDirectoryListing({
+            url: dirAbsPath,
+            callbackPerDir: function( dirname ) { 
+                self.recursiveScanDirectory( dirAbsPath + dirname ); },
+            callbackPerFile: function( filename ) {
+                self.fileFound( dirAbsPath, filename ); },
+            callbackDone: self.fetchCompletes });
+    }
+
+    self.selectAction = function(e, detail) {
+        if (! detail.isSelected) {
+            this.selectedDirectory = undefined;
+        } else {
+            this.selectedDirectory = self.menuDirectories[detail.item.dataset.dir];
+        }
+    }
+
+    $(function(){
+        self.recursiveScanDirectory(self.menuRootURL);
+    });
+});
+  </script>
+</polymer-element>

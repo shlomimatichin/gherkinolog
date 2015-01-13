@@ -4,6 +4,9 @@
 <link rel="import" href="bower_components/core-icon-button/core-icon-button.html">
 <link rel="import" href="bower_components/core-menu/core-submenu.html">
 <link rel="import" href="animated-page.html">
+<link rel="import" href="gherkinolog-directory-menu.html">
+<link rel="import" href="gherkinolog-markdown.html">
+<link rel="import" href="includehtml.html">
 
 <polymer-element name="gherkinolog-main">
   <template>
@@ -49,17 +52,8 @@
       <content select=".gherkinolog-logo"></content>
     </core-toolbar>
     <div>
-
-      <core-menu>
-        <core-submenu icon="expand-more" label="General">
-          <core-item label="Terms & Definitions"></core-item>
-          <core-item label="Versions"></core-item>
-        </core-submenu>
-
-      </core-menu>
-<!--
-      <spec-menu id="theSpecMenu"></spec-menu>
--->
+      <gherkinolog-directory-menu selectedDirectory="{{selectedDirectory}}">
+      </gherkinolog-directory-menu>
     </div>
   </core-header-panel>
   <core-header-panel main mode="waterfall-tall">
@@ -76,14 +70,11 @@
 </template>
 <script>
 Polymer('gherkinolog-main', {
-    ready: function() {
-        var ani = this.$.ani;
-//        this.$.theSpecMenu.addEventListener('spec-menu-selected', function(e) {
-//            var element = document.createElement('features-directory');
-//            var directory = e.detail.directory;
-//            element.directory = directory;
-//            ani.switchToElement(element);
-//        });
+    selectedDirectoryChanged: function() {
+        var element = document.createElement('include-html');
+        element.href = this.selectedDirectory.absPath + "/page.html";
+        element.locals = {selectedDirectory: this.selectedDirectory};
+        this.$.ani.switchToElement(element);
     },
 });
 </script>

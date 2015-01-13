@@ -13,7 +13,7 @@
     "tests"
   ],
   "dependencies": {
-    "polymer": "Polymer/polymer#~0.5.1",
+    "polymer": "Polymer/polymer#~0.5.2",
     "core-header-panel": "Polymer/core-header-panel#~0.5.1",
     "font-roboto": "Polymer/font-roboto#~0.5.1",
     "core-toolbar": "Polymer/core-toolbar#~0.5.1",
@@ -27,6 +27,7 @@
     "qunit": "~1.16.0",
     "core-animated-pages": "Polymer/core-animated-pages#~0.5.1",
     "impress.js": "~0.5.3",
-    "core-ajax": "Polymer/core-ajax#~0.5.2"
+    "core-ajax": "Polymer/core-ajax#~0.5.2",
+    "markdown": "~0.5.0"
   }
 }

@@ -1,6 +1,6 @@
 <link rel="import" href="bower_components/core-ajax/core-ajax.html">
 
-<polymer-element name="include-html" attributes="href">
+<polymer-element name="include-html" attributes="href locals">
   <template>
     <core-ajax auto url="{{href}}" handleAs="text" on-core-response="{{handleResponse}}"></core-ajax>
     <div id="container"></div>
@@ -8,10 +8,7 @@
   <script>
 Polymer({
     handleResponse: function(ev) {
-            console.log('here');
-            console.log(ev.detail.response);
-            console.log(this);
-        this.$.container.innerHTML = ev.detail.response;
+        this.injectBoundHTML(ev.detail.response, this.$.container);
     },
 });
   </script>

@@ -1,0 +1,15 @@
+<script src="bower_components/markdown/lib/markdown.js"></script>
+
+<polymer-element name="gherkinolog-markdown" attributes="selectedDirectory">
+  <template>
+    <core-ajax auto url="{{selectedDirectory.absPath + '/page.md'}}" handleAs="text" on-core-response="{{handleResponse}}"></core-ajax>
+    <div id="container"></div>
+  </template>
+  <script>
+Polymer({
+    handleResponse: function(ev) {
+        this.$.container.innerHTML = markdown.toHTML(ev.detail.response);
+    },
+});
+  </script>
+</polymer-element>
