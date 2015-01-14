@@ -5,6 +5,8 @@ function TestCase(name, classname, status, time, output, absPath) {
     self.status = status;
     self.time = time;
     self.output = output;
+    self.featureTitle = classname.split(".")[1];
+    self.featureFilename = classname.split(".")[0];
 }
 
 var junitReportTestCases = [];

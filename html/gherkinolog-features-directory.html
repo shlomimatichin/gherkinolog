@@ -54,14 +54,14 @@ Polymer('feature-gherkin-line', {
   </script>
 </polymer-element>
 
-<polymer-element name="feature-gherkin-lines" attributes="lines label examples">
+<polymer-element name="feature-gherkin-lines" attributes="lines label examples status">
   <template>
     <style>
       ul {
         list-style: none;
       }
       .label {
-        cursor: pointer; 
+        cursor: pointer;
         font-weight: bold;
       }
       .examples {
@@ -70,6 +70,9 @@ Polymer('feature-gherkin-line', {
       }
       .examplesLabel {
         font-weight: bold;
+      }
+      .scenario-status {
+        margin-left: 4em;
       }
 
 
@@ -174,6 +177,7 @@ Polymer('feature-gherkin-line', {
     <div class="label" on-click="{{toggle}}">
         <core-icon icon="{{chevronIcon}}"></core-icon>
         {{label}}
+        <span class="scenario-status scenario-status-{{status}}">{{status}}</span>
     </div>
     <core-collapse id="collapse">
       <ul>
@@ -238,6 +242,28 @@ Polymer('feature-gherkin-lines', {
           text-decoration: none;
           color: #3367d6;
         }
+
+        feature-gherkin-lines::shadow .scenario-status-passed {
+          color: green;
+        }
+        feature-gherkin-lines::shadow .scenario-status-failed {
+          color: red;
+        }
+        feature-gherkin-lines::shadow .scenario-status-notrun {
+          color: grey;
+        }
+        .feature-status {
+          margin-left: 4em;
+        }
+        .feature-status-passed {
+          color: green;
+        }
+        .feature-status-failed {
+          color: red;
+        }
+        .feature-status-notrun {
+          color: grey;
+        }
     </style>
     <div id="root">
         <H1>{{directory.title}}</H1>
@@ -250,7 +276,10 @@ Polymer('feature-gherkin-lines', {
             </template>
         </ul>
         <template repeat="{{ feature in featureFiles }}">
-            <h2 data-feature-title="{{feature.title}}" class="feature-title">Feature: {{feature.title}}</h2>
+            <h2 data-feature-title="{{feature.title}}" class="feature-title">
+                Feature: {{feature.title}}
+                <span class="feature-status feature-status-{{feature.status}}">{{feature.status}}</span>
+            </h2>
             <p>
                 {{feature.description}}
             </p>
@@ -260,7 +289,8 @@ Polymer('feature-gherkin-lines', {
             </template>
             <template repeat="{{ scenario in feature.scenarios }}">
                 <feature-gherkin-lines
-                    lines="{{ scenario.lines }}" 
+                    status="{{ scenario.status }}"
+                    lines="{{ scenario.lines }}"
                     examples="{{ scenario.examples }}"
                     label="Scenario: {{scenario.title}}">
                 </feature-gherkin-lines>
@@ -272,13 +302,57 @@ Polymer('feature-gherkin-lines', {
 Polymer({
     featureFiles: [],
 
+    ready: function() {
+        var self = this;
+        this.matchFeaturesToTestCases();
+        junitReportRegisterNewCasesCallback(function() {
+            self.testCases = junitReportTestCases;
+        });
+    },
+
+    testCasesChanged: function() {
+        this.matchFeaturesToTestCases();
+    },
+
+    matchFeaturesToTestCases: function() {
+        this.testCases = junitReportTestCases;
+        for (var i in this.featureFiles) {
+            var feature = this.featureFiles[i];
+            feature.status = "passed";
+            for (var j in feature.scenarios) {
+                scenario = feature.scenarios[j];
+                var testCase = _.findWhere(this.testCases, {
+                    featureFilename: feature.filename.split(".")[0],
+                    featureTitle: feature.title,
+                    name: scenario.title});
+                if (testCase == undefined) {
+                    if (feature.status == "passed")
+                        feature.status = "notrun";
+                    scenario.status = "notrun";
+                } else {
+                    scenario.status = testCase.status;
+                    if (testCase.status == "failed")
+                        feature.status = "failed";
+                }
+            }
+        }
+        console.log(this.testCases);
+        console.log(this.featureFiles);
+    },
+
     fileFound: function(filename) {
         if (!stringEndsWith(filename, ".feature"))
             return;
+        this.remainingFilesToFetch += 1;
         $.ajax({url: this.directory.absPath + '/' + filename}).done($.proxy(function(contents) {
             var parsed = parseGherkin(this.directory.absPath + '/' + filename, contents);
+            parsed.filename = filename;
+            parsed.absPath = this.directory.absPath + '/' + filename;
             this.featureFiles.push(parsed);
             _.sortBy(this.featureFiles, function(featureFile) { return featureFile.title; });
+            this.remainingFilesToFetch -= 1;
+            if (this.remainingFilesToFetch == 0)
+                this.matchFeaturesToTestCases();
         }, this));
     },
 
@@ -286,6 +360,7 @@ Polymer({
         this.featureFiles = [];
         if (this.directory === undefined)
             return;
+        this.remainingFilesToFetch = 0;
         getDirectoryListing({
             url: this.directory.absPath,
             callbackPerFile: $.proxy(this.fileFound, this)});
