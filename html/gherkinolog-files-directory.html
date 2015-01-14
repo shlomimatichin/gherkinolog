@@ -1,0 +1,38 @@
+<script src="stringutils.js"></script>
+<script src="directory.js"></script>
+
+<polymer-element name="gherkinolog-files-directory" attributes="directory">
+  <template>
+    <div id="root">
+        <H1>{{directory.title}}</H1>
+        <ul>
+            <template repeat="{{ file in files }}">
+                <li>
+                    <a href="{{file.path}}" target="_blank">{{file.basename}}</a>
+                </li>
+            </template>
+        </ul>
+    </div>
+  </template>
+  <script>
+Polymer({
+    files: [],
+
+    fileFound: function(filename) {
+        if (filename == "page.html" || filename == "title.txt")
+            return;
+        this.files.push({path: this.directory.absPath + "/" + filename, basename: filename});
+        _.sortBy(this.featureFiles, function(file) { return file.basename; });
+    },
+
+    directoryChanged: function(val) {
+        this.files = [];
+        if (this.directory === undefined)
+            return;
+        getDirectoryListing({
+            url: this.directory.absPath,
+            callbackPerFile: $.proxy(this.fileFound, this)});
+    },
+});
+  </script>
+</polymer-element>
