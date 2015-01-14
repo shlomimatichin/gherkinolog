@@ -38,6 +38,7 @@ function junitReportReadDirectory(directory) {
                         testCases[i].firstChild.firstChild.wholeText,
                         absPath);
                     junitReportTestCases.push(testCase);
+                    _.sortBy(junitReportTestCases, function(testCase) { return testCase.classname; });
                 }
                 remaining -= 1;
                 if (remaining == 0)
