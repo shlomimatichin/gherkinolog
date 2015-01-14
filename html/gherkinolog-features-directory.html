@@ -223,12 +223,8 @@ Polymer('feature-gherkin-lines', {
 <polymer-element name="gherkinolog-features-directory" attributes="directory">
   <template>
     <style shim-shadowdom="">
-        .root {
+        #root {
           color: #444;
-        }
-    </style>
-    <style>
-        .root {
           height: 100%;
           background-color:white;
           padding-top: 30px;
@@ -243,18 +239,18 @@ Polymer('feature-gherkin-lines', {
           color: #3367d6;
         }
     </style>
-    <div class="root">
+    <div id="root">
         <H1>{{directory.title}}</H1>
         <strong>Table of contents</strong>
         <ul>
             <template repeat="{{ feature in featureFiles }}">
                 <li>
-                    <a href="#">{{feature.title}}</a>
+                <a href="#" data-feature-title="{{feature.title}}" on-click="{{scrollToFeature}}">{{feature.title}}</a>
                 </li>
             </template>
         </ul>
         <template repeat="{{ feature in featureFiles }}">
-            <h2>Feature: {{feature.title}}</h2>
+            <h2 data-feature-title="{{feature.title}}" class="feature-title">Feature: {{feature.title}}</h2>
             <p>
                 {{feature.description}}
             </p>
@@ -293,6 +289,16 @@ Polymer({
         getDirectoryListing({
             url: this.directory.absPath,
             callbackPerFile: $.proxy(this.fileFound, this)});
+    },
+
+    scrollToFeature: function(event, detail, sender) {
+        event.preventDefault();
+        var featureTitles = $(this.$.root).children(".feature-title")
+        for (var i in featureTitles)
+            if (featureTitles[i].dataset.featureTitle == sender.dataset.featureTitle) {
+                featureTitles[i].scrollIntoView();
+                return;
+            }
     },
 });
   </script>
