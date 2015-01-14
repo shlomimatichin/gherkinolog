@@ -26,6 +26,20 @@ function currentURLDirname()
     return href.substring( 0, href.lastIndexOf( "/" ) + 1 ); 
 }
 
+function absoluteURI(uri)
+{
+    if (stringStartsWith(uri, "http://"))
+        return uri;
+    else if (stringStartsWith(uri, "https://"))
+        return uri;
+    else if (stringStartsWith(uri, "/")) {
+        var parser = document.createElement('a');
+        parser.href = uri;
+        return parser.protocol + "//" + parser.host + uri
+    } else
+        return currentURLDirname() + uri;
+}
+
 function deleteTerminatingSlash( path )
 {
     if ( path.lastIndexOf( "/" ) != path.length - 1 )

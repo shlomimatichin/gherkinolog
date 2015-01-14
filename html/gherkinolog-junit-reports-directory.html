@@ -1,0 +1,35 @@
+<script src="stringutils.js"></script>
+<script src="directory.js"></script>
+<script src="junit-report.js"></script>
+
+<polymer-element name="gherkinolog-junit-reports-directory" attributes="directory">
+  <template>
+    <div id="root">
+        <H1>{{directory.title}}</H1>
+        <ul>
+            <template repeat="{{ testCase in testCases }}">
+                <li>
+                    {{ testCase.classname }}
+                    {{ testCase.name }}
+                    {{ testCase.status }}
+                </li>
+            </template>
+        </ul>
+    </div>
+  </template>
+  <script>
+Polymer(new function() {
+    self = this;
+    self.testCases = junitReportTestCases;
+    junitReportRegisterNewCasesCallback(function() {
+        self.testCases = junitReportTestCases;
+    });
+
+    self.directoryChanged = function() {
+        if (this.directory === undefined)
+            return;
+        junitReportReadDirectory(this.directory.absPath);
+    };
+});
+  </script>
+</polymer-element>

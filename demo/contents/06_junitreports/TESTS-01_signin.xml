@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuite errors="0" failures="0" name="01_signin.Sign In" skipped="0" tests="3" time="3.137215"><testcase classname="01_signin.Sign In" name="Sign in successfully" status="passed" time="1.2355"><system-out>
+<![CDATA[
+@scenario.begin
+  Scenario: Sign in successfully
+    Given the user is not signed in ... passed in 0.327s
+    And a "admin" user "root"/"root" is in the db ... passed in 0.183s
+    When user signs in as "root"/"root" ... passed in 0.671s
+    Then signed in at the menu bar shows user "root" ... passed in 0.009s
+    And toast says "successfully" ... passed in 0.047s
+
+@scenario.end
+--------------------------------------------------------------------------------
+]]>
+</system-out></testcase><testcase classname="01_signin.Sign In" name="Sign in fails when user does not exist" status="passed" time="0.599898"><system-out>
+<![CDATA[
+@scenario.begin
+  Scenario: Sign in fails when user does not exist
+    Given the user is not signed in ... passed in 0.159s
+    And a "admin" user "root"/"root" is in the db ... passed in 0.012s
+    When user signs in as "nosuchuser"/"root" ... passed in 0.401s
+    Then sign in form shows full screen ... passed in 0.006s
+    And toast says "invalid" ... passed in 0.021s
+
+@scenario.end
+--------------------------------------------------------------------------------
+]]>
+</system-out></testcase><testcase classname="01_signin.Sign In" name="Sign in fails when password is incorrect" status="passed" time="1.301817"><system-out>
+<![CDATA[
+@scenario.begin
+  Scenario: Sign in fails when password is incorrect
+    Given the user is not signed in ... passed in 0.125s
+    And a "admin" user "root"/"root" is in the db ... passed in 0.011s
+    When user signs in as "root"/"wrongpassword" ... passed in 0.560s
+    Then sign in form shows full screen ... passed in 0.006s
+    And toast says "invalid" ... passed in 0.033s
+    When user signs in as "root"/"root" ... passed in 0.509s
+    Then signed in at the menu bar shows user "root" ... passed in 0.008s
+    And toast says "successfully" ... passed in 0.049s
+
+@scenario.end
+--------------------------------------------------------------------------------
+]]>
+</system-out></testcase></testsuite>
